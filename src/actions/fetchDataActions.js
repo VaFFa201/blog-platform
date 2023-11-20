@@ -34,6 +34,12 @@ export const handlePageChange = (pageNum) => {
   }
 }
 
+export const clearCurrentArticle = () => {
+  return {
+    type: 'CLEAR_CURRENT_ARTICLE',
+  }
+}
+
 export const fetchData = () => {
   return async (dispatch) => {
     dispatch(fetchDataRequest())

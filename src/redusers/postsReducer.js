@@ -1,17 +1,16 @@
 /* eslint-disable default-param-last */
 /* eslint-disable indent */
 
-const dafaultState = {
+const initialState = {
   pageData: [],
   pageNumber: 1,
   totalArticles: 0,
   error: '',
-  currentArticle: {},
-  isLogin: false,
+  currentArticle: '',
   isLoading: false,
 }
 
-const reducer = (state = dafaultState, action) => {
+const postsReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_DATA_REQUEST':
       return {
@@ -45,10 +44,15 @@ const reducer = (state = dafaultState, action) => {
         loading: false,
         currentArticle: action.payload.article,
       }
+    case 'CLEAR_CURRENT_ARTICLE':
+      return {
+        ...state,
+        currentArticle: '',
+      }
 
     default:
       return state
   }
 }
 
-export default reducer
+export default postsReducer

@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react'
-import { Flex, Space, Typography } from 'antd'
+import { Flex, Space, Spin, Typography } from 'antd'
 import { useParams } from 'react-router-dom'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import Markdown from 'react-markdown'
 
 import * as fetchDataActions from '../../actions/fetchDataActions'
 
@@ -11,15 +12,15 @@ import styles from './PostView.module.scss'
 
 const { Text } = Typography
 
-function PostView({ currentArticle, fetchArticleData }) {
+function PostView({ currentArticle, fetchArticleData, clearCurrentArticle }) {
   const params = useParams()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     fetchArticleData(params.sign)
-  }, [])
 
-  const { slug, description, title, createdAt, author, favoritesCount, tagList } = currentArticle
-  const { username, image } = author
+    // return dispatch(clearCurrentArticle())
+  }, [])
 
   function formatDate(dateString) {
     const months = [
@@ -45,6 +46,15 @@ function PostView({ currentArticle, fetchArticleData }) {
     return `${month} ${day}, ${year}`
   }
 
+  if (!currentArticle)
+    return (
+      <Flex style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        <Spin />
+      </Flex>
+    )
+
+  const { slug, description, title, createdAt, author, favoritesCount, tagList, body } = currentArticle
+  const { username, image } = author
   const tags = tagList.map((tag, index) => {
     const tadKey = `${slug}-${tag}${index}`
     return (
@@ -53,8 +63,6 @@ function PostView({ currentArticle, fetchArticleData }) {
       </Text>
     )
   })
-
-  console.log(currentArticle)
 
   return (
     <Flex className={`${styles.post} ${styles['post-view']}`} vertical>
@@ -75,43 +83,7 @@ function PostView({ currentArticle, fetchArticleData }) {
         </Flex>
       </Flex>
       <div className={styles.post__description}>{description}</div>
-
-      {/* <div className={styles.post__subtitle}>Est Ampyciden pater patent</div>
-      <div className={`${styles.post__chapter} ${styles.chapter}`}>
-        <div className={styles.chapter__header}>Amor saxa inpiger</div>
-        <div className={styles.chapter__content}>
-          <p className={styles.chapter__paragraph}>
-            Lorem markdownum Stygias neque is referam fudi, breve per. Et Achaica tamen: nescia ista occupat, illum se
-            ad potest humum et.
-          </p>
-        </div>
-      </div>
-      <div className={`${styles.post__chapter} ${styles.chapter}`}>
-        <div className={styles.chapter__header}>Qua deos has fontibus</div>
-        <div className={styles.chapter__content}>
-          <p className={styles.chapter__paragraph}>
-            Recens nec ferro responsaque dedere armenti opes momorderat pisce, vitataque et fugisse. Et iamque
-            incipiens, qua huius suo omnes ne pendentia citus pedum.
-          </p>
-        </div>
-      </div>
-      <div className={`${styles.post__chapter} ${styles.chapter}`}>
-        <div className={styles.chapter__header}>Quamvis pronuba</div>
-        <div className={styles.chapter__content}>
-          <p className={styles.chapter__paragraph}>
-            Ulli labore facta. Io cervis non nosterque nullae, vides: aethere Delphice subit, tamen Romane ob cubilia
-            Rhodopen calentes librata! Nihil populorum flava, inrita? Sit hic nunc, hoc formae Esse illo? Umeris eram
-            similis, crudelem de est relicto ingemuit finiat Pelia uno cernunt Venus draconem, hic, Methymnaeae.
-          </p>
-          <p className={styles.chapter__paragraph}>
-            1. Clamoribus haesit tenentem iube Haec munera
-            <br /> 2. Vincla venae
-            <br /> 3. Paris includere etiam tamen
-            <br /> 4. Superi te putria imagine Deianira
-            <br /> 5. Tremore hoste Esse sed perstat capillis siqua
-          </p>
-        </div>
-      </div> */}
+      <Markdown>{body}</Markdown>
     </Flex>
   )
 }

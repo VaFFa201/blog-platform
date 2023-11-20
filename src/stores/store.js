@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import reducer from '../redusers/reducer'
+import postReducer from '../redusers/postsReducer'
 
-const store = configureStore({ reducer })
+const store = configureStore({ reducer: postReducer })
 
 export default store
